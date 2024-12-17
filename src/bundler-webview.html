@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WinnetouJs</title>
+  <link href="{codiconUri}" rel="stylesheet" />
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js" integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+" crossorigin="anonymous"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      animation: all 2s;
+    }
+
+    .errorsOutput {
+      width: 100%;
+      height: 200px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 10px;
+      overflow: auto;
+      padding: 10px;
+      background-color: #444;
+      display: none;
+      color: #eee;
+    }
+
+    button {
+      padding: 5px 10px;
+      font-weight: bold;
+      display: inline-flex;
+      align-itens: center;
+      align-content: center;
+      background-color: #444;
+      color: #eee;
+
+      span {
+        margin-right: 10px;
+      }
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      background-color: #222;
+      color: #eee;
+      border: 0px;
+    }
+
+    .btnDiv {
+      width: 100%;
+      text-align: center;
+
+      button {
+        padding: 10px 30px;
+        cursor: pointer;
+      }
+    }
+
+    .missingSpan {
+      border: 1px dashed #444;
+      border-radius: 4px;
+      font-style: italic;
+      padding: 10px;
+      margin-bottom: 5px;
+    }
+
+    .progress {
+      margin-top: 10px;
+
+      .bar {
+        width: 100%;
+        height: 10px;
+        border: 1px dashed #9993;
+        margin-bottom: 10px;
+
+        .inner-bar {
+          height: 100%;
+          width: 0%;
+          background: linear-gradient(45deg, #222, #f00);
+        }
+      }
+
+      .buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        align-content: center;
+      }
+    }
+
+    .options {
+      width: 100%;
+      margin-top: 20px;
+
+      .check {
+        display: flex;
+        align-items: center;
+        align-content: center;
+        margin-bottom: 10px;
+
+        input {
+          width: 12px;
+          height: 12px;
+          margin-right: 10px;
+        }
+      }
+    }
+
+    .xwin,
+    .watching {
+      padding: 3px 7px;
+      background-color: #111cbb;
+      color: #fff;
+      font-size: 10px;
+      display: none;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    .watching {
+      background-color: #bb119f;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="notRunning" style="display: none">
+    <p>WinnetouJs WBR Server is not running.</p>
+    <div style="margin-top: 20px" id="btnStart">
+      <button style="cursor: pointer" onclick="startWBRServer()">
+        Start WinnetouJs Server
+      </button>
+      <div id="errorMessage" style=""></div>
+      <div class=" options">
+        <div class="check">
+          <input type="checkbox" id="check-terminal" />
+          <label for="check-terminal">Show terminal</label>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 20px">
+      <a href="https://winnetoujs.org/docs">Get help in documentation</a>
+    </div>
+  </div>
+  <div id="app" style="display: none">
+    <div class="progress">
+
+      <div class="output_component" style="display: flex; align-items: center; align-content: center; margin-bottom: 5px;">
+        <span class="codicon codicon-chevron-right" style="margin-right: 10px"></span>
+        <span class="xwin" id="xwin">XWin</span>
+        <span class="watching" id="watching">Watching</span>
+        <span id="output_component"></span>
+      </div>
+
+      <div class="bar">
+        <div class="inner-bar" id="inner-bar"></div>
+      </div>
+
+      <div class="buttons">
+        <button onclick="runBundler()" id="runBundlerButton">Run bundler</button>
+        <div style="display: flex; align-items:center;align-content:center;">
+          <div style="margin-right:10px;" id="percent">0%</div>
+          <div id="errors" style="display: none; align-items:center;align-content:center; cursor: pointer;" onclick="openErrorsOutput()">
+            <span class="codicon codicon-warning" style='margin-right: 3px;'></span>
+            <span id="warningsNumber">2</span>
+            <span class="codicon codicon-error" style='margin-left: 6px; margin-right:3px;'></span>
+            <span id="errorsNumber">4</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class=" options">
+      <div class="check">
+        <input type="checkbox" id="check-compile" checked />
+        <label for="check-compile">Compile bundle</label>
+      </div>
+      <div class="check">
+        <input type="checkbox" id="check-transpile" checked />
+        <label for="check-transpile">Transpile constructos and
+          sass</label>
+      </div>
+      <div class="check">
+        <input type="checkbox" onchange="toggleProduction()" id="check-watch" checked />
+        <label for="check-watch">Watch</label>
+      </div>
+      <div class="check">
+        <input type="checkbox" id="check-production" onchange="toggleWatch()" />
+        <label for="check-production">Production</label>
+      </div>
+
+      <div class="check" style="margin-top: 20px;">
+        <a onclick="closeWBR()" style="cursor: pointer;">Click to close connection</a>
+      </div>
+
+
+    </div>
+    <div class="errorsOutput" id="errorsOutput"></div>
+  </div>
+  <script>
+    (script);
+  </script>
+</body>
+
+</html>
