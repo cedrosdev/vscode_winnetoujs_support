@@ -1,0 +1,91 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+  "files.exclude": {
+    "out": false // set this to true to hide the "out" folder with the compiled JS files
+  },
+  "search.exclude": {
+    "out": true // set this to false to include "out" folder in search results
+  },
+  // Turn off tsc task auto detection since we have the necessary tasks as npm scripts
+  "typescript.tsc.autoDetect": "off",
+
+  "editor.wordWrap": "bounded",
+  "html.validate.styles": false,
+  "html.validate.scripts": false,
+  "prettier.htmlWhitespaceSensitivity": "ignore",
+  "prettier.bracketSameLine": true,
+  // "workbench.preferredDarkColorTheme": "DevPro High Contrast",
+  "editor.quickSuggestionsDelay": 10,
+  "editor.suggestOnTriggerCharacters": true,
+  "editor.parameterHints.enabled": true,
+  // "editor.wordBasedSuggestions": false,
+  "cSpell.diagnosticLevel": "Hint",
+  "editor.selectionClipboard": false,
+
+  // para o git não alterar a cor das abas M modified
+  "workbench.editor.decorations.colors": false,
+  "javascript.validate.enable": true,
+  "scm.autoReveal": false,
+  "explorer.autoReveal": false,
+  "editor.fontFamily": "'Victor Mono','Fira Code','monospace', monospace, 'Droid Sans Fallback','Victor Mono'",
+  "editor.fontWeight": "600",
+  "editor.fontSize": 16,
+  "editor.lineNumbers": "off",
+  "editor.lineHeight": 1.7,
+  "prettier.arrowParens": "avoid",
+  "editor.fontLigatures": true,
+  "editor.maxTokenizationLineLength": 480000,
+  // "workbench.colorTheme": "Bearded Theme Arc",
+  // "workbench.colorTheme": "Gruvbox Dark Hard",
+  "workbench.colorTheme": "Dark Horizon Italic",
+  // "workbench.colorTheme": "Bearded Theme Altica",
+  // "workbench.colorTheme": "Cute",
+  "scss.scannerRootPath": "Public/logged",
+  "editor.suggest.showStructs": true,
+  "editor.stickyScroll.enabled": false,
+  "editor.suggest.showSnippets": true,
+  "editor.suggest.showReferences": true,
+  "editor.suggest.showProperties": true,
+  "editor.suggest.showOperators": true,
+  "editor.suggest.showModules": true,
+  "editor.suggest.showMethods": true,
+  "editor.suggest.showKeywords": true,
+  "editor.suggest.showIssues": false,
+  "editor.suggest.showInterfaces": true,
+  "editor.suggest.showInlineDetails": true,
+  "editor.suggest.showClasses": true,
+  "javascript.preferences.importModuleSpecifierEnding": "js",
+  "workbench.editor.revealIfOpen": true,
+
+  "workbench.colorCustomizations": {
+    "[Spirited Away]": {
+      "tab.activeBackground": "#ca8327",
+      "tab.activeForeground": "#000000"
+    },
+    "[Cyberpink]": {
+      "tab.activeBackground": "#ee6cd8",
+      "tab.activeForeground": "#000000",
+      "tab.inactiveBackground": "#000000",
+      "tab.inactiveForeground": "#ffffff",
+      "tab.unfocusedActiveBackground": "#c4a7bf",
+      "tab.unfocusedActiveForeground": "#000000",
+      "tab.unfocusedInactiveBackground": "#000000",
+      "tab.unfocusedInactiveForeground": "#fff"
+    },
+    "panel.border": "#98088c",
+    "editorGroup.border": "#98088c",
+    "sideBar.border": "#98088c",
+    "editor.foldBackground": "#0000",
+    "editorIndentGuide.activeBackground1": "#ca8327",
+    "editorSuggestWidget.selectedBackground": "#fe00bf9f",
+    "pickerGroup.foreground": "#D8DEE9", // Color for the Command Palette's category titles
+    "pickerGroup.border": "#4C566A", // Color for the border around the category titles
+    "quickInput.background": "#2E3440", // Background color of the Command Palette
+    "quickInput.foreground": "#ECEFF4", // Text color of the Command Palette
+    "list.focusBackground": "#3B4252", // Background color for focused items in the Command Palette
+    "list.hoverBackground": "#434C5E", // Background color for hovered items
+    "list.activeSelectionBackground": "#4C566A", // Background color of the selected item
+    "list.activeSelectionForeground": "#ECEFF4" // Text color of the selected item
+    // "statusBar.background": "#b46b0b"
+  }
+}

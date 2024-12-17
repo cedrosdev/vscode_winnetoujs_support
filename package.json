@@ -1,0 +1,130 @@
+{
+  "name": "winnetoujs_official_vscode_support",
+  "displayName": "WinnetouJs VSCode Support",
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:javascript"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "winnetoujs.strings.synchronize",
+        "title": "Synchronize",
+        "icon": "$(sync)"
+      },
+      {
+        "command": "winnetoujs.strings.add",
+        "title": "Add",
+        "icon": "$(add)"
+      },
+      {
+        "command": "winnetoujs.strings.changeLanguage",
+        "title": "Change Language",
+        "icon": "$(globe)"
+      },
+      {
+        "command": "winnetoujs.strings.save",
+        "title": "Apply changes",
+        "icon": "$(save)"
+      },
+      {
+        "command": "winnetoujs.strings.goto",
+        "title": "Go to string"
+      },
+      {
+        "command": "winnetoujs.strings.gotoAdd",
+        "title": "Create new on goto"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "winnetoujs.strings.goto",
+        "key": "ctrl+shift+t",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "winnetoujs.strings.gotoAdd",
+        "key": "ctrl+shift+y",
+        "when": "editorTextFocus"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "WinnetouSidebar",
+          "title": "WinnetouJs",
+          "icon": "resources/logo.svg"
+        }
+      ]
+    },
+    "views": {
+      "WinnetouSidebar": [
+        {
+          "name": "Bundler",
+          "id": "bundlerWebView",
+          "type": "webview"
+        },
+        {
+          "name": "Strings",
+          "id": "stringsWebview",
+          "type": "webview"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "winnetoujs.strings.add",
+          "group": "navigation@1",
+          "when": "view == stringsWebview"
+        },
+        {
+          "command": "winnetoujs.strings.changeLanguage",
+          "group": "navigation@2",
+          "when": "view == stringsWebview"
+        },
+        {
+          "command": "winnetoujs.strings.synchronize",
+          "group": "navigation@3",
+          "when": "view == stringsWebview"
+        },
+        {
+          "command": "winnetoujs.strings.save",
+          "group": "navigation@4",
+          "when": "view == stringsWebview"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.9",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.95.0",
+    "@typescript-eslint/eslint-plugin": "^8.10.0",
+    "@typescript-eslint/parser": "^8.7.0",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1",
+    "eslint": "^9.13.0",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "@vscode/codicons": "^0.0.36",
+    "vscode-textmate": "^9.1.0"
+  }
+}
