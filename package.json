@@ -76,6 +76,11 @@
           "name": "Strings",
           "id": "stringsWebview",
           "type": "webview"
+        },
+        {
+          "name": "Bundles History",
+          "id": "historyWebview",
+          "type": "webview"
         }
       ]
     },
