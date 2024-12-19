@@ -5,6 +5,7 @@ import { getLanguages, parseConstructos, parseStrings } from "./parser";
 import { Statusbar } from "./statusbar";
 import { MyStringsWebviewProvider } from "./strings-webview";
 import { bundlerProvider } from "./bundler-webview";
+import { historyProvider } from "./history-webview";
 
 interface App {
   entry: string;
@@ -110,6 +111,8 @@ export async function activate(context: vscode.ExtensionContext) {
 
   const bundlerProvider_ = new bundlerProvider(context.extensionUri);
 
+  const historyProvider_ = new historyProvider(context.extensionUri);
+
   context.subscriptions.push(
     vscode.window.registerWebviewViewProvider(
       "stringsWebview",
@@ -118,6 +121,10 @@ export async function activate(context: vscode.ExtensionContext) {
     vscode.window.registerWebviewViewProvider(
       "bundlerWebView",
       bundlerProvider_
+    ),
+    vscode.window.registerWebviewViewProvider(
+      "historyWebview",
+      historyProvider_
     )
   );
   context.subscriptions.push(
@@ -166,6 +173,9 @@ export async function activate(context: vscode.ExtensionContext) {
     ),
     vscode.commands.registerCommand("winnetoujs.strings.save", () => {
       stringsWebviewProvider.save();
+    }),
+    vscode.commands.registerCommand("winnetoujs.history.refresh", () => {
+      historyProvider_.getHistory();
     })
   );
 }

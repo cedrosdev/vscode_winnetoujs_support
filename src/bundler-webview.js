@@ -18,6 +18,7 @@ let port = 5501;
 let isWatching = false;
 
 const get = id => document.getElementById(id) || new HTMLElement();
+
 const getCheckbox = id => {
   let el = document.getElementById(id);
   if (el instanceof HTMLInputElement) return el;

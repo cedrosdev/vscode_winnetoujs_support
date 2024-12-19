@@ -16,6 +16,11 @@
   "contributes": {
     "commands": [
       {
+        "command": "winnetoujs.history.refresh",
+        "title": "Refresh",
+        "icon": "$(sync)"
+      },
+      {
         "command": "winnetoujs.strings.synchronize",
         "title": "Synchronize",
         "icon": "$(sync)"
@@ -76,6 +81,11 @@
           "name": "Strings",
           "id": "stringsWebview",
           "type": "webview"
+        },
+        {
+          "name": "Bundles History",
+          "id": "historyWebview",
+          "type": "webview"
         }
       ]
     },
@@ -100,6 +110,11 @@
           "command": "winnetoujs.strings.save",
           "group": "navigation@4",
           "when": "view == stringsWebview"
+        },
+        {
+          "command": "winnetoujs.history.refresh",
+          "group": "navigation@1",
+          "when": "view == historyWebview"
         }
       ]
     }
