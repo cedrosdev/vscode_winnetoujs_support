@@ -173,6 +173,9 @@ export async function activate(context: vscode.ExtensionContext) {
     ),
     vscode.commands.registerCommand("winnetoujs.strings.save", () => {
       stringsWebviewProvider.save();
+    }),
+    vscode.commands.registerCommand("winnetoujs.history.refresh", () => {
+      historyProvider_.getHistory();
     })
   );
 }

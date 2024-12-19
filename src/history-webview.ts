@@ -7,11 +7,13 @@ const { exec } = require("child_process");
 export class historyProvider implements vscode.WebviewViewProvider {
   constructor(private readonly _extensionUri: vscode.Uri) {
     this.extensionUri = _extensionUri;
+    this.workspaceUri = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
   }
 
   private _view?: vscode.WebviewView;
   codiconUri: any;
   extensionUri: vscode.Uri;
+  workspaceUri: any;
 
   public resolveWebviewView(
     webviewView: vscode.WebviewView,
@@ -26,6 +28,9 @@ export class historyProvider implements vscode.WebviewViewProvider {
       switch (message.type) {
         case "alert":
           vscode.window.showInformationMessage(message.text);
+          break;
+        case "getHistory":
+          this.getHistory();
           break;
       }
     });
@@ -62,5 +67,26 @@ export class historyProvider implements vscode.WebviewViewProvider {
       .replace(`(script)`, script)
       .replace(`// @ts-ignore`, ``)
       .replace(`//@ts-ignore`, ``);
+  }
+
+  async getHistory(): Promise<any> {
+    const filePath = path.resolve(this.workspaceUri, ".winnetouJsData");
+    let json = {};
+    const content = await fs.promises
+      .readFile(filePath, { encoding: "utf8" })
+      .catch(err => {
+        if (err.code === "ENOENT") {
+          console.warn("File not found, starting with empty JSON.");
+          return null; // File not found, proceed with an empty object
+        }
+        throw err;
+      });
+    if (content) {
+      json = JSON.parse(content);
+    }
+    return this._view?.webview.postMessage({
+      type: "historyReceived",
+      content: json,
+    });
   }
 }
