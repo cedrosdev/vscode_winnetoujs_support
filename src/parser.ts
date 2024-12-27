@@ -117,35 +117,38 @@ export async function parseConstructos(): Promise<ConstructorData[]> {
 export async function getUpdatedWinConfig(): Promise<any> {
   const configPath = path.join(
     vscode.workspace.workspaceFolders?.[0].uri.fsPath || "",
-    "win.config.js"
+    "win.config.json"
   );
   if (!fs.existsSync(configPath)) {
-    throw new Error(`win.config.js not found at ${configPath}`);
+    throw new Error(`win.config.json not found at ${configPath}`);
   }
 
-  const config = (await import(configPath)).default;
-
+  // const config = (await import(configPath)).default;
+  const configFileContent = fs.readFileSync(configPath, "utf-8");
+  const config = JSON.parse(configFileContent);
   return config;
 }
 
 export async function getUpdatedPort(): Promise<any> {
-  const configPath = path.join(
-    vscode.workspace.workspaceFolders?.[0].uri.fsPath || "",
-    "win.config.js"
-  );
-  if (!fs.existsSync(configPath)) {
-    throw new Error(`win.config.js not found at ${configPath}`);
-  }
-  const configFileContent = fs.readFileSync(configPath, "utf-8");
-  const regex = /serverPort\s*:\s*(\d+)/;
-  const match = configFileContent.match(regex);
+  const config = await getUpdatedWinConfig();
+  return config.serverPort;
+  // const configPath = path.join(
+  //   vscode.workspace.workspaceFolders?.[0].uri.fsPath || "",
+  //   "win.config.js"
+  // );
+  // if (!fs.existsSync(configPath)) {
+  //   throw new Error(`win.config.js not found at ${configPath}`);
+  // }
+  // const configFileContent = fs.readFileSync(configPath, "utf-8");
+  // const regex = /serverPort\s*:\s*(\d+)/;
+  // const match = configFileContent.match(regex);
 
-  if (match) {
-    const serverPort = parseInt(match[1], 10); // Extracted port number
-    console.log("Server Port:", serverPort);
-    return serverPort;
-  } else {
-    console.log("serverPort not found");
-    return false;
-  }
+  // if (match) {
+  //   const serverPort = parseInt(match[1], 10); // Extracted port number
+  //   console.log("Server Port:", serverPort);
+  //   return serverPort;
+  // } else {
+  //   console.log("serverPort not found");
+  //   return false;
+  // }
 }

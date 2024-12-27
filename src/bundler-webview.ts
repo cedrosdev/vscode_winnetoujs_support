@@ -37,6 +37,10 @@ export class bundlerProvider implements vscode.WebviewViewProvider {
             port: port || false,
           });
           break;
+        case "killAllTerminals":
+          // command to close all vscode terminals
+          vscode.commands.executeCommand("workbench.action.terminal.killAll");
+          break;
       }
     });
     // =====================================================
