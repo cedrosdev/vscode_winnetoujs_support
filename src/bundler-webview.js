@@ -11,10 +11,11 @@ window.addEventListener("message", payload => {
 });
 
 let socket;
-
 let triedToConnect = false;
-let port = 5501;
-
+const port = 5501;
+let totalErrors = 0;
+let totalWarnings = 0;
+let errorsOutput = ``;
 let isWatching = false;
 
 const get = id => document.getElementById(id) || new HTMLElement();
@@ -34,6 +35,12 @@ function displayWbrServerNotRunning() {
   if (el) el.style.display = "block";
   let el2 = document.getElementById(`app`);
   if (el2) el2.style.display = "none";
+}
+
+function killAllTerminals() {
+  vscode.postMessage({
+    type: "killAllTerminals",
+  });
 }
 
 function toggleWatch() {
@@ -146,7 +153,7 @@ function start_Socket(receivedPort) {
     const pp = (filesLoaded / totalFiles) * 100;
 
     get(`inner-bar`).style.width = pp + `%`;
-    get(`percent`).innerHTML = pp + `%`;
+    get(`percent`).innerHTML = pp ? Math.round(pp) + `%` : ``;
     get(`output_component`).innerHTML = fileName;
     if (filesLoaded === totalFiles) filesLoaded = 0;
   });
@@ -154,13 +161,20 @@ function start_Socket(receivedPort) {
   socket.on("timeElapsed", time => {
     get(`output_component`).innerHTML = `in ${time}ms`;
     get(`runBundlerButton`).removeAttribute("disabled");
+    get(`bar`).classList.remove(`toggleAnimation`);
+    if (totalErrors > 0) {
+      get(`bar`).classList.add(`toggleAnimationError`);
+    }
   });
 
   socket.on("compilationErrors", data => {
     if (data.errors?.length > 0 || data.warnings?.length > 0) {
       get(`errors`).style.display = "flex";
-      get(`errorsNumber`).innerHTML = data.errors?.length || 0;
-      get(`warningsNumber`).innerHTML = data.warnings?.length || 0;
+      // ---------------------------------------
+      totalErrors += data.errors?.length || 0;
+      totalWarnings += data.warnings?.length || 0;
+      get(`errorsNumber`).innerHTML = totalErrors.toString();
+      get(`warningsNumber`).innerHTML = totalWarnings.toString();
       let out = ``;
       data.errors?.forEach(error => {
         out += "Error: " + error + "<p>----------------------</p>";
@@ -168,7 +182,12 @@ function start_Socket(receivedPort) {
       data.warnings?.forEach(warning => {
         out += "Warning: " + warning + "<p>----------------------</p>";
       });
-      get(`errorsOutput`).innerHTML = out;
+      console.log(`compilationErrors`, {
+        errors: data.errors,
+        warnings: data.warnings,
+      });
+      errorsOutput += out;
+      get(`errorsOutput`).innerHTML = errorsOutput;
     }
   });
 
@@ -203,7 +222,13 @@ function closeWBR() {
 function runBundler() {
   get(`errors`).style.display = "none";
   get(`errorsOutput`).style.display = "none";
+  get(`errorsOutput`).innerHTML = ``;
   get("xwin").style.display = "none";
+  get(`bar`).classList.remove(`toggleAnimationError`);
+  // reset vars
+  totalErrors = 0;
+  totalWarnings = 0;
+  errorsOutput = ``;
 
   let options = {
     watch: getCheckbox(`check-watch`).checked,
@@ -222,6 +247,7 @@ function runBundler() {
     type: "runBundler",
     payload: options,
   });
+  get(`bar`).classList.add(`toggleAnimation`);
 }
 
 /**
