@@ -1,6 +1,7 @@
 {
-  "name": "winnetoujs_official_vscode_support",
-  "displayName": "WinnetouJs VSCode Support",
+  "name": "winnetoujs-vscode-framework",
+  "publisher": "cedros-development",
+  "displayName": "WinnetouJs Framework",
   "description": "",
   "version": "1.0.1",
   "engines": {
@@ -66,7 +67,7 @@
         {
           "id": "WinnetouSidebar",
           "title": "WinnetouJs",
-          "icon": "resources/logo.svg"
+          "icon": "resources/logo.png"
         }
       ]
     },
