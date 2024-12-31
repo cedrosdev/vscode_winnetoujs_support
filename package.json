@@ -1,13 +1,18 @@
 {
+  "version": "1.0.4",
   "name": "winnetoujs-vscode-framework",
   "publisher": "cedros-development",
   "displayName": "WinnetouJs Framework",
+  "galleryBanner": {
+    "color": "#8f4598",
+    "theme": "dark"
+  },
+  "icon": "resources/extension-logo.png",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cedrosdev/vscode_winnetoujs_support.git"
   },
   "description": "",
-  "version": "1.0.3",
   "engines": {
     "vscode": "^1.95.0"
   },
