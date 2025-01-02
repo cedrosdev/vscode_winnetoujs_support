@@ -1,3 +1,4 @@
+import { error } from "console";
 import * as vscode from "vscode";
 export class Statusbar {
   statusBarItem: vscode.StatusBarItem;
@@ -11,6 +12,10 @@ export class Statusbar {
     running: () => (this.statusBarItem.text = `WinnetouJs support is running`),
     parsing: () =>
       (this.statusBarItem.text = `$(loading~spin) Parsing Winnetou constructos for intellisense...`),
+    error: (message: string) => {
+      this.statusBarItem.text = `$(error) ${message}`;
+      this.statusBarItem.color = "red";
+    },
   };
   show() {
     this.statusBarItem.show();

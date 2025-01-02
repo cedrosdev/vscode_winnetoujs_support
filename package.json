@@ -1,5 +1,5 @@
 {
-  "version": "1.0.4",
+  "version": "1.0.5",
   "name": "winnetoujs-vscode-framework",
   "publisher": "cedros-development",
   "displayName": "WinnetouJs Framework",
@@ -20,7 +20,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onLanguage:javascript"
+    "workspaceContains:filePattern:win.config.json"
   ],
   "main": "./out/extension.js",
   "contributes": {

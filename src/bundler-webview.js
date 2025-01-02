@@ -65,7 +65,6 @@ function displayWbrServer() {
 }
 
 function startWBRServer() {
-  // will try to get updated port in win.config.js
   vscode.postMessage({
     type: "getPortFromConfig",
   });
@@ -122,7 +121,7 @@ function start_Socket(receivedPort) {
     if (triedToConnect)
       get(
         `errorMessage`
-      ).innerHTML = `Extension is unable to connect to WinnetouJs WBR Server. Please check if port is already in use, change it in win.config.js and try again.`;
+      ).innerHTML = `Extension is unable to connect to WinnetouJs WBR Server. Please check if port is already in use, change it in on and try again.`;
     console.log("\n\nFailed to connect to the WinnetouJs server");
     displayWbrServerNotRunning();
   });
