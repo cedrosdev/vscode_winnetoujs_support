@@ -12,7 +12,20 @@ import { MyStringsWebviewProvider } from "./strings-webview";
 import { bundlerProvider } from "./bundler-webview";
 import { historyProvider } from "./history-webview";
 
+// codicons reference
+// https://iconduck.com/sets/codicons
+
 export async function activate(context: vscode.ExtensionContext) {
+  activate_(context);
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("winnetoujs.extension.reload", () => {
+      activate_(context);
+    })
+  );
+}
+
+async function activate_(context: vscode.ExtensionContext) {
   console.log(`WinnetouJs IDE is running.`);
   const statusbar = new Statusbar();
   statusbar.messages.running();
@@ -24,7 +37,6 @@ export async function activate(context: vscode.ExtensionContext) {
       "WinnetouJs extension not running because win.config.json file not found or it is not a WinnetouJs project workspace."
     );
     statusbar.messages.error("WinnetouJs extension not running.");
-
     return;
   }
   const defaultLang = config.defaultLang;
