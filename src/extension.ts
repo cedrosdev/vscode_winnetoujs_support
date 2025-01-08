@@ -11,6 +11,7 @@ import { Statusbar } from "./statusbar";
 import { MyStringsWebviewProvider } from "./strings-webview";
 import { bundlerProvider } from "./bundler-webview";
 import { historyProvider } from "./history-webview";
+const statusbar = new Statusbar();
 
 // codicons reference
 // https://iconduck.com/sets/codicons
@@ -27,7 +28,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 async function activate_(context: vscode.ExtensionContext) {
   console.log(`WinnetouJs IDE is running.`);
-  const statusbar = new Statusbar();
+
   statusbar.messages.running();
   statusbar.show();
   statusbar.messages.parsing();

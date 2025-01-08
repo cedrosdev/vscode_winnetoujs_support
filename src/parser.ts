@@ -130,6 +130,7 @@ async function __getUpdatedWinConfig(): Promise<IWinConfig | false> {
 
     if (!fs.existsSync(packagePath)) {
       console.warn("No package.json file found");
+      (global as any).winnetoujsPath = false;
       return false;
     }
 
@@ -138,6 +139,7 @@ async function __getUpdatedWinConfig(): Promise<IWinConfig | false> {
 
     if (!packageJson.winnetoujs?.path) {
       console.warn("No winnetou.path found in package.json");
+      (global as any).winnetoujsPath = false;
       return false;
     }
 
@@ -154,6 +156,7 @@ async function __getUpdatedWinConfig(): Promise<IWinConfig | false> {
 
     if (!fs.existsSync(configPath)) {
       console.warn("No win.config.json file found");
+      (global as any).winnetoujsPath = false;
       return false;
     }
 

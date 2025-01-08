@@ -70,8 +70,9 @@ export class bundlerProvider implements vscode.WebviewViewProvider {
 
     terminal.sendText(
       `${
-        (global as any).winnetoujsPath &&
-        "cd " + (global as any).winnetoujsPath + "; "
+        (global as any).winnetoujsPath
+          ? "cd " + (global as any).winnetoujsPath + "; "
+          : ""
       }node wbr -rs;`
     );
     hasToShowTerminal && terminal.show();
