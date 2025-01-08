@@ -70,7 +70,11 @@ export class historyProvider implements vscode.WebviewViewProvider {
   }
 
   async getHistory(): Promise<any> {
-    const filePath = path.resolve(this.workspaceUri, ".winnetouJsData");
+    const filePath = path.resolve(
+      this.workspaceUri,
+      (global as any).winnetoujsPath || "",
+      ".winnetouJsData"
+    );
     let json = {};
     const content = await fs.promises
       .readFile(filePath, { encoding: "utf8" })

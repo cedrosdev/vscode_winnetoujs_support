@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import * as path from "path";
 import * as fs from "fs";
+import { IWinConfig } from "./types";
 
 interface ConstructorData {
   id: string;
@@ -12,6 +13,7 @@ interface ConstructorData {
 export async function getLanguages(): Promise<string[]> {
   const folderPath = path.join(
     vscode.workspace.workspaceFolders?.[0].uri.fsPath || "",
+    (global as any).winnetoujsPath || "",
     "translations"
   );
   if (!fs.existsSync(folderPath)) {
@@ -32,6 +34,7 @@ export async function parseStrings(): Promise<{ [key: string]: any }> {
 
   const folderPath = path.join(
     vscode.workspace.workspaceFolders?.[0].uri.fsPath || "",
+    (global as any).winnetoujsPath || "",
     "translations"
   );
   if (!fs.existsSync(folderPath)) {
@@ -56,19 +59,8 @@ export async function parseStrings(): Promise<{ [key: string]: any }> {
 
 export async function parseConstructos(): Promise<ConstructorData[]> {
   const results: ConstructorData[] = [];
-
-  // Read win.config.js (assume it's in the workspace root)
-  const configPath = path.join(
-    vscode.workspace.workspaceFolders?.[0].uri.fsPath || "",
-    "win.config.js"
-  );
-  if (!fs.existsSync(configPath)) {
-    throw new Error(`win.config.js not found at ${configPath}`);
-  }
-
-  const config = await import(configPath); // Load config
-  const folder = config.default.constructosPath;
-
+  const config = await __getUpdatedWinConfig();
+  const folder = config !== false ? config.constructosPath : `./constructos`;
   const folderPath = path.isAbsolute(folder)
     ? folder
     : path.join(
@@ -79,7 +71,6 @@ export async function parseConstructos(): Promise<ConstructorData[]> {
     console.warn(`Folder not found: ${folderPath}`);
     return [];
   }
-
   const htmlFiles = fs
     .readdirSync(folderPath)
     .filter(file => file.endsWith(".html"));
@@ -114,41 +105,67 @@ export async function parseConstructos(): Promise<ConstructorData[]> {
   return results;
 }
 
-export async function getUpdatedWinConfig(): Promise<any> {
-  const configPath = path.join(
+export async function getUpdatedWinConfig(): Promise<IWinConfig | false> {
+  return await __getUpdatedWinConfig();
+}
+
+export async function getUpdatedPort(): Promise<Number> {
+  const config = await __getUpdatedWinConfig();
+  return config !== false ? config.serverPort : 0;
+}
+
+async function __getUpdatedWinConfig(): Promise<IWinConfig | false> {
+  let configPath = path.join(
     vscode.workspace.workspaceFolders?.[0].uri.fsPath || "",
     "win.config.json"
   );
+
   if (!fs.existsSync(configPath)) {
-    throw new Error(`win.config.json not found at ${configPath}`);
+    // in this case vscode has to prompt the user to input the path to the win.config.json file
+
+    const packagePath = path.join(
+      vscode.workspace.workspaceFolders?.[0].uri.fsPath || "",
+      "package.json"
+    );
+
+    if (!fs.existsSync(packagePath)) {
+      console.warn("No package.json file found");
+      (global as any).winnetoujsPath = false;
+      return false;
+    }
+
+    const packageFileContent = fs.readFileSync(packagePath, "utf-8");
+    const packageJson = JSON.parse(packageFileContent);
+
+    if (!packageJson.winnetoujs?.path) {
+      console.warn("No winnetou.path found in package.json");
+      (global as any).winnetoujsPath = false;
+      return false;
+    }
+
+    const winnetoujsPath = packageJson.winnetoujs.path;
+
+    // Store the winnetoujsPath globally
+    (global as any).winnetoujsPath = winnetoujsPath;
+
+    configPath = path.join(
+      vscode.workspace.workspaceFolders?.[0].uri.fsPath || "",
+      winnetoujsPath,
+      "win.config.json"
+    );
+
+    if (!fs.existsSync(configPath)) {
+      console.warn("No win.config.json file found");
+      (global as any).winnetoujsPath = false;
+      return false;
+    }
+
+    const configFileContent = fs.readFileSync(configPath, "utf-8");
+    const config = JSON.parse(configFileContent);
+    return config;
   }
 
-  // const config = (await import(configPath)).default;
   const configFileContent = fs.readFileSync(configPath, "utf-8");
   const config = JSON.parse(configFileContent);
   return config;
-}
-
-export async function getUpdatedPort(): Promise<any> {
-  const config = await getUpdatedWinConfig();
-  return config.serverPort;
-  // const configPath = path.join(
-  //   vscode.workspace.workspaceFolders?.[0].uri.fsPath || "",
-  //   "win.config.js"
-  // );
-  // if (!fs.existsSync(configPath)) {
-  //   throw new Error(`win.config.js not found at ${configPath}`);
-  // }
-  // const configFileContent = fs.readFileSync(configPath, "utf-8");
-  // const regex = /serverPort\s*:\s*(\d+)/;
-  // const match = configFileContent.match(regex);
-
-  // if (match) {
-  //   const serverPort = parseInt(match[1], 10); // Extracted port number
-  //   console.log("Server Port:", serverPort);
-  //   return serverPort;
-  // } else {
-  //   console.log("serverPort not found");
-  //   return false;
-  // }
 }

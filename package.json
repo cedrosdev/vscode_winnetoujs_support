@@ -1,5 +1,5 @@
 {
-  "version": "1.0.4",
+  "version": "1.0.8",
   "name": "winnetoujs-vscode-framework",
   "publisher": "cedros-development",
   "displayName": "WinnetouJs Framework",
@@ -20,19 +20,24 @@
     "Other"
   ],
   "activationEvents": [
-    "onLanguage:javascript"
+    "workspaceContains:filePattern:win.config.json"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
+        "command": "winnetoujs.extension.reload",
+        "title": "Reload Extension",
+        "icon": "$(rocket)"
+      },
+      {
         "command": "winnetoujs.history.refresh",
-        "title": "Refresh",
-        "icon": "$(sync)"
+        "title": "Update bundles",
+        "icon": "$(debug-restart)"
       },
       {
         "command": "winnetoujs.strings.synchronize",
-        "title": "Synchronize",
+        "title": "Synchronize strings with default language",
         "icon": "$(sync)"
       },
       {
@@ -47,7 +52,7 @@
       },
       {
         "command": "winnetoujs.strings.save",
-        "title": "Apply changes",
+        "title": "Save changes to json file",
         "icon": "$(save)"
       },
       {
@@ -101,6 +106,11 @@
     },
     "menus": {
       "view/title": [
+        {
+          "command": "winnetoujs.extension.reload",
+          "group": "navigation@1",
+          "when": "view == bundlerWebView"
+        },
         {
           "command": "winnetoujs.strings.add",
           "group": "navigation@1",

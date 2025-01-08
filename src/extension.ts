@@ -1,50 +1,45 @@
 import * as vscode from "vscode";
 import * as path from "path";
 import * as fs from "fs";
-import { getLanguages, parseConstructos, parseStrings } from "./parser";
+import {
+  getLanguages,
+  getUpdatedWinConfig,
+  parseConstructos,
+  parseStrings,
+} from "./parser";
 import { Statusbar } from "./statusbar";
 import { MyStringsWebviewProvider } from "./strings-webview";
 import { bundlerProvider } from "./bundler-webview";
 import { historyProvider } from "./history-webview";
+const statusbar = new Statusbar();
 
-interface App {
-  entry: string;
-  out: string;
-}
-
-interface Sass {
-  entryFolder: string;
-  outFolder: string;
-  firstFile?: string;
-}
-
-interface IWinConfig {
-  constructosPath: string;
-  constructosOut: string;
-  apps: App[];
-  entry?: string | object;
-  out?: string | object;
-  sass?: Sass[];
-  defaultLang?: string;
-  publicPath?: string;
-  icons?: string;
-}
+// codicons reference
+// https://iconduck.com/sets/codicons
 
 export async function activate(context: vscode.ExtensionContext) {
+  activate_(context);
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("winnetoujs.extension.reload", () => {
+      activate_(context);
+    })
+  );
+}
+
+async function activate_(context: vscode.ExtensionContext) {
   console.log(`WinnetouJs IDE is running.`);
-  const statusbar = new Statusbar();
+
   statusbar.messages.running();
   statusbar.show();
   statusbar.messages.parsing();
-  const configPath = path.join(
-    vscode.workspace.workspaceFolders?.[0].uri.fsPath || "",
-    "win.config.js"
-  );
-  if (!fs.existsSync(configPath)) {
-    throw new Error(`win.config.js not found at ${configPath}`);
+  const config = await getUpdatedWinConfig();
+  if (!config) {
+    vscode.window.showErrorMessage(
+      "WinnetouJs extension not running because win.config.json file not found or it is not a WinnetouJs project workspace."
+    );
+    statusbar.messages.error("WinnetouJs extension not running.");
+    return;
   }
-
-  const config: IWinConfig = (await import(configPath)).default;
   const defaultLang = config.defaultLang;
 
   parseConstructos().then(constructosObj => {

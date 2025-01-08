@@ -67,7 +67,14 @@ export class bundlerProvider implements vscode.WebviewViewProvider {
     const terminal = vscode.window.createTerminal(
       "WinnetouJs WBR Extension Server"
     );
-    terminal.sendText("node wbr -rs");
+
+    terminal.sendText(
+      `${
+        (global as any).winnetoujsPath
+          ? "cd " + (global as any).winnetoujsPath + "; "
+          : ""
+      }node wbr -rs;`
+    );
     hasToShowTerminal && terminal.show();
   }
 
