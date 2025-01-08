@@ -30,7 +30,7 @@ export async function getLanguages(): Promise<string[]> {
 }
 
 export async function parseStrings(): Promise<{ [key: string]: any }> {
-  const results: { [key: string]: any } = new Array();
+  const results: { [key: string]: any } = new Object();
 
   const folderPath = path.join(
     vscode.workspace.workspaceFolders?.[0].uri.fsPath || "",
@@ -38,8 +38,8 @@ export async function parseStrings(): Promise<{ [key: string]: any }> {
     "translations"
   );
   if (!fs.existsSync(folderPath)) {
-    console.warn(`Folder not found: ${folderPath}`);
-    return [];
+    console.warn(`WinnetouJS: Translations: Folder not found: ${folderPath}`);
+    return {};
   }
 
   const jsonFiles = fs
@@ -65,6 +65,7 @@ export async function parseConstructos(): Promise<ConstructorData[]> {
     ? folder
     : path.join(
         vscode.workspace.workspaceFolders?.[0].uri.fsPath || "",
+        (global as any).winnetoujsPath || "",
         folder
       );
   if (!fs.existsSync(folderPath)) {

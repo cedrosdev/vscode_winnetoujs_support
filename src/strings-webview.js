@@ -33,6 +33,12 @@ document.getElementById(`loadStringsLink`)?.addEventListener(`click`, () => {
 window.addEventListener(`message`, ev => {
   const data = ev.data;
   switch (data.type) {
+    case "strings_error":
+      _alert(data.content);
+      let el = document.getElementById(`output-strings`);
+      if (el instanceof Element)
+        el.innerHTML = `Strings can't be loaded. Verify if you have a valid strings location in your folders and reload window.`;
+      break;
     case `strings`:
       setStrings(data.content);
       break;
