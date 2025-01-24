@@ -141,12 +141,12 @@ function getStringEntryComponent(key, value, count = new Date().getTime()) {
         <span class="codicon codicon-trash" style='margin-left: 10px; cursor: pointer;' onClick="del('${key}')"></span>
       </div>
     </div>
-    <input 
-      type='text' 
-      value="${value}" 
-      id="input${count}" 
+
+    <textarea 
+      spellcheck="true"
+      id="textarea${count}" 
       onkeyup="changedString(this.value, '${key}')"
-    />
+    >${value}</textarea>
   </div>
 `;
 }
@@ -166,12 +166,13 @@ function getMissingEntryComponent(key, value, count = new Date().getTime()) {
       <span id='${key}'>${key}</span>
      
     </div>
-    <div class='missingSpan'>"${value}"</div>
-    <input 
-      type='text'  
+    <div class='missingSpan'>${value}</div>
+  
+       <textarea 
+      spellcheck="true"
       id="input${count}_missing" 
       onkeyup="changedMissingString(this.value, '${key}')"
-    />
+    ></textarea>
   </div>
 `;
 }
