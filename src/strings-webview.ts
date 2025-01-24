@@ -80,6 +80,15 @@ export class MyStringsWebviewProvider implements vscode.WebviewViewProvider {
       localResourceRoots: [this._extensionUri],
     };
 
+    if (this.defaultLanguage === undefined) {
+      webviewView.webview.html = `
+      <i>
+        No default language selected. Please specify a default language in the win.config.json file to enable this view and then reload vscode.
+      </i>
+      `;
+      return;
+    }
+
     this.getExternalHTML().then(content => {
       webviewView.webview.html = content;
     });
@@ -269,6 +278,13 @@ export class MyStringsWebviewProvider implements vscode.WebviewViewProvider {
   async loadInitialStrings() {
     return new Promise((resolve, reject) => {
       parseStrings().then(res => {
+        if (Object.keys(res).length === 0) {
+          this._view?.webview.postMessage({
+            type: "strings_error",
+            content: `No strings found. Please check your translations settings. Go to https://winnetoujs.org/docs for more information.`,
+          });
+          return reject(res.error);
+        }
         this.strings = res;
         this._view?.webview.postMessage({
           type: "strings",

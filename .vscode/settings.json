@@ -29,7 +29,7 @@
   "explorer.autoReveal": false,
   "editor.fontFamily": "'Victor Mono','Fira Code','monospace', monospace, 'Droid Sans Fallback','Victor Mono'",
   "editor.fontWeight": "600",
-  "editor.fontSize": 16,
+  "editor.fontSize": 14,
   "editor.lineNumbers": "off",
   "editor.lineHeight": 1.7,
   "prettier.arrowParens": "avoid",

@@ -21,7 +21,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     vscode.commands.registerCommand("winnetoujs.extension.reload", () => {
-      activate_(context);
+      vscode.commands.executeCommand("workbench.action.reloadWindow");
     })
   );
 }

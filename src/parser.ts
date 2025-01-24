@@ -30,7 +30,7 @@ export async function getLanguages(): Promise<string[]> {
 }
 
 export async function parseStrings(): Promise<{ [key: string]: any }> {
-  const results: { [key: string]: any } = new Array();
+  const results: { [key: string]: any } = new Object();
 
   const folderPath = path.join(
     vscode.workspace.workspaceFolders?.[0].uri.fsPath || "",
@@ -38,8 +38,8 @@ export async function parseStrings(): Promise<{ [key: string]: any }> {
     "translations"
   );
   if (!fs.existsSync(folderPath)) {
-    console.warn(`Folder not found: ${folderPath}`);
-    return [];
+    console.warn(`WinnetouJS: Translations: Folder not found: ${folderPath}`);
+    return {};
   }
 
   const jsonFiles = fs
@@ -65,37 +65,45 @@ export async function parseConstructos(): Promise<ConstructorData[]> {
     ? folder
     : path.join(
         vscode.workspace.workspaceFolders?.[0].uri.fsPath || "",
+        (global as any).winnetoujsPath || "",
         folder
       );
   if (!fs.existsSync(folderPath)) {
     console.warn(`Folder not found: ${folderPath}`);
     return [];
   }
-  const htmlFiles = fs
-    .readdirSync(folderPath)
-    .filter(file => file.endsWith(".html"));
 
-  // ---------------------
+  function getAllHtmlFiles(dir: string): string[] {
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+    const files = entries
+      .filter(entry => !entry.isDirectory() && entry.name.endsWith(".html"))
+      .map(file => path.join(dir, file.name));
+    const folders = entries.filter(entry => entry.isDirectory());
+    folders.forEach(folder => {
+      files.push(...getAllHtmlFiles(path.join(dir, folder.name)));
+    });
+    return files;
+  }
+
+  const htmlFiles = getAllHtmlFiles(folderPath);
 
   await Promise.all(
-    htmlFiles.map(async htmlFile => {
-      const filePath = path.join(folderPath, htmlFile);
+    htmlFiles.map(async filePath => {
       const fileContent = await fs.promises.readFile(filePath, "utf-8");
       const lines = fileContent.split("\n");
 
       lines.forEach((line, index) => {
-        // Match id="[[box]]" syntax
         const regex = /id="\[\[([^\]]+)\]\]"/g;
         let match;
         while ((match = regex.exec(line)) !== null) {
-          const id = match[1]; // Extract the id value (e.g., box)
-          const position = match.index + match[0].indexOf(`[[${id}]]`) + 2; // Position in line
+          const id = match[1];
+          const position = match.index + match[0].indexOf(`[[${id}]]`) + 2;
 
           results.push({
             id,
             file: filePath,
-            line: index + 1, // Line number (1-based)
-            position, // Position in line (0-based)
+            line: index + 1,
+            position,
           });
         }
       });
