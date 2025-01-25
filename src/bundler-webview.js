@@ -151,13 +151,13 @@ function start_Socket(receivedPort) {
     filesLoaded++;
     const pp = (filesLoaded / totalFiles) * 100;
 
-    console.log("file", {
-      isWatching,
-      filesLoaded,
-      totalFiles,
-      pp: Math.round(pp),
-      fileName,
-    });
+    // console.log("file", {
+    //   isWatching,
+    //   filesLoaded,
+    //   totalFiles,
+    //   pp: Math.round(pp),
+    //   fileName,
+    // });
 
     get(`inner-bar`).style.width = pp + `%`;
     get(`percent`).innerHTML = pp ? Math.round(pp) + `%` : ``;
@@ -218,7 +218,7 @@ function start_Socket(receivedPort) {
   socket.on(`watchingT`, () => {
     get(`watching`).style.display = `block`;
     isWatching = true;
-    console.log("winnetoujs: received watchingT event", { isWatching });
+    // console.log("winnetoujs: received watchingT event", { isWatching });
   });
 
   socket.on(`cancelWatchingT`, () => {
