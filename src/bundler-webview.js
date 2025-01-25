@@ -17,6 +17,8 @@ let totalErrors = 0;
 let totalWarnings = 0;
 let errorsOutput = ``;
 let isWatching = false;
+let filesLoaded = 0;
+let totalFiles = 0;
 
 const get = id => document.getElementById(id) || new HTMLElement();
 
@@ -133,9 +135,6 @@ function start_Socket(receivedPort) {
     console.log("\n\nDisconnected from the WinnetouJs server");
   });
 
-  let filesLoaded = 0;
-  let totalFiles = 0;
-
   socket.on("totalFiles", total => {
     totalFiles = total;
   });
@@ -147,14 +146,30 @@ function start_Socket(receivedPort) {
   socket.on("file", fileName => {
     if (isWatching) {
       totalFiles = 1;
+      filesLoaded = 0;
     }
     filesLoaded++;
     const pp = (filesLoaded / totalFiles) * 100;
 
+    console.log("file", {
+      isWatching,
+      filesLoaded,
+      totalFiles,
+      pp: Math.round(pp),
+      fileName,
+    });
+
     get(`inner-bar`).style.width = pp + `%`;
     get(`percent`).innerHTML = pp ? Math.round(pp) + `%` : ``;
     get(`output_component`).innerHTML = fileName;
-    if (filesLoaded === totalFiles) filesLoaded = 0;
+    // if (filesLoaded === totalFiles) filesLoaded = 0;
+    if (isWatching) {
+      get(`output_component`).innerHTML =
+        `<span style="color: green">Updated: ` + fileName + `</span>`;
+      setTimeout(() => {
+        get(`output_component`).innerHTML = ``;
+      }, 3000);
+    }
   });
 
   socket.on("timeElapsed", time => {
@@ -203,6 +218,7 @@ function start_Socket(receivedPort) {
   socket.on(`watchingT`, () => {
     get(`watching`).style.display = `block`;
     isWatching = true;
+    console.log("winnetoujs: received watchingT event", { isWatching });
   });
 
   socket.on(`cancelWatchingT`, () => {
@@ -218,6 +234,7 @@ function closeWBR() {
   });
 }
 
+// onclick html webview button
 function runBundler() {
   get(`errors`).style.display = "none";
   get(`errorsOutput`).style.display = "none";
@@ -228,6 +245,7 @@ function runBundler() {
   totalErrors = 0;
   totalWarnings = 0;
   errorsOutput = ``;
+  filesLoaded = 0;
 
   let options = {
     watch: getCheckbox(`check-watch`).checked,
@@ -242,10 +260,12 @@ function runBundler() {
   get(`runBundlerButton`).setAttribute("disabled", "true");
   get(`inner-bar`).style.width = `0%`;
   get(`percent`).innerHTML = `0%`;
+
   sendToWBR({
     type: "runBundler",
     payload: options,
   });
+
   get(`bar`).classList.add(`toggleAnimation`);
 }
 
