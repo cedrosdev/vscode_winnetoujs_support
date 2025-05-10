@@ -11,15 +11,15 @@ export class Statusbar {
   messages = {
     running: () => {
       this.statusBarItem.text = `WinnetouJs support is running`;
-      this.statusBarItem.color = "green";
+      // this.statusBarItem.color = "green";
     },
     parsing: () => {
       this.statusBarItem.text = `$(loading~spin) Parsing Winnetou constructos for intellisense...`;
-      this.statusBarItem.color = "yellow";
+      // this.statusBarItem.color = "yellow";
     },
     error: (message: string) => {
       this.statusBarItem.text = `$(error) ${message}`;
-      this.statusBarItem.color = "red";
+      // this.statusBarItem.color = "red";
     },
   };
   show() {
