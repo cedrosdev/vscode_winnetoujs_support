@@ -137,6 +137,16 @@
           "when": "view == historyWebview"
         }
       ]
+    },
+    "configuration": {
+      "title": "WinnetouJs Settings",
+      "properties": {
+        "winnetoujs.projectPath": {
+          "type": "string",
+          "default": "path/to/your/win.config.json",
+          "description": "Absolute path of WinnetouJs project folder. The same where is located win.config.json and wbr."
+        }
+      }
     }
   },
   "scripts": {

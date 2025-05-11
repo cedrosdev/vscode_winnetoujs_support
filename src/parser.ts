@@ -12,8 +12,7 @@ interface ConstructorData {
 
 export async function getLanguages(): Promise<string[]> {
   const folderPath = path.join(
-    vscode.workspace.workspaceFolders?.[0].uri.fsPath || "",
-    (global as any).winnetoujsPath || "",
+    getWinnetouFolderFromWorkspaceSettings() || "",
     "translations"
   );
   if (!fs.existsSync(folderPath)) {
@@ -33,8 +32,7 @@ export async function parseStrings(): Promise<{ [key: string]: any }> {
   const results: { [key: string]: any } = new Object();
 
   const folderPath = path.join(
-    vscode.workspace.workspaceFolders?.[0].uri.fsPath || "",
-    (global as any).winnetoujsPath || "",
+    getWinnetouFolderFromWorkspaceSettings() || "",
     "translations"
   );
   if (!fs.existsSync(folderPath)) {
@@ -63,11 +61,7 @@ export async function parseConstructos(): Promise<ConstructorData[]> {
   const folder = config !== false ? config.constructosPath : `./constructos`;
   const folderPath = path.isAbsolute(folder)
     ? folder
-    : path.join(
-        vscode.workspace.workspaceFolders?.[0].uri.fsPath || "",
-        (global as any).winnetoujsPath || "",
-        folder
-      );
+    : path.join(getWinnetouFolderFromWorkspaceSettings() || "", folder);
   if (!fs.existsSync(folderPath)) {
     console.warn(`Folder not found: ${folderPath}`);
     return [];
@@ -123,57 +117,22 @@ export async function getUpdatedPort(): Promise<Number> {
 }
 
 async function __getUpdatedWinConfig(): Promise<IWinConfig | false> {
-  let configPath = path.join(
-    vscode.workspace.workspaceFolders?.[0].uri.fsPath || "",
+  const WINNETOU_FOLDER_FROM_WORKSPACE_SETTINGS =
+    getWinnetouFolderFromWorkspaceSettings();
+  const configPath = path.join(
+    WINNETOU_FOLDER_FROM_WORKSPACE_SETTINGS || "",
     "win.config.json"
   );
-
   if (!fs.existsSync(configPath)) {
-    // in this case vscode has to prompt the user to input the path to the win.config.json file
-
-    const packagePath = path.join(
-      vscode.workspace.workspaceFolders?.[0].uri.fsPath || "",
-      "package.json"
-    );
-
-    if (!fs.existsSync(packagePath)) {
-      console.warn("No package.json file found");
-      (global as any).winnetoujsPath = false;
-      return false;
-    }
-
-    const packageFileContent = fs.readFileSync(packagePath, "utf-8");
-    const packageJson = JSON.parse(packageFileContent);
-
-    if (!packageJson.winnetoujs?.path) {
-      console.warn("No winnetou.path found in package.json");
-      (global as any).winnetoujsPath = false;
-      return false;
-    }
-
-    const winnetoujsPath = packageJson.winnetoujs.path;
-
-    // Store the winnetoujsPath globally
-    (global as any).winnetoujsPath = winnetoujsPath;
-
-    configPath = path.join(
-      vscode.workspace.workspaceFolders?.[0].uri.fsPath || "",
-      winnetoujsPath,
-      "win.config.json"
-    );
-
-    if (!fs.existsSync(configPath)) {
-      console.warn("No win.config.json file found");
-      (global as any).winnetoujsPath = false;
-      return false;
-    }
-
-    const configFileContent = fs.readFileSync(configPath, "utf-8");
-    const config = JSON.parse(configFileContent);
-    return config;
+    return false;
   }
-
   const configFileContent = fs.readFileSync(configPath, "utf-8");
   const config = JSON.parse(configFileContent);
   return config;
+}
+
+export function getWinnetouFolderFromWorkspaceSettings(): string | undefined {
+  return vscode.workspace
+    .getConfiguration("winnetoujs")
+    .get<string>("projectPath");
 }

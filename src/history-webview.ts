@@ -1,19 +1,21 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
-import { getUpdatedPort, getUpdatedWinConfig } from "./parser";
+import {
+  getUpdatedPort,
+  getUpdatedWinConfig,
+  getWinnetouFolderFromWorkspaceSettings,
+} from "./parser";
 const { exec } = require("child_process");
 
 export class historyProvider implements vscode.WebviewViewProvider {
   constructor(private readonly _extensionUri: vscode.Uri) {
     this.extensionUri = _extensionUri;
-    this.workspaceUri = vscode.workspace.workspaceFolders?.[0].uri.fsPath;
   }
 
   private _view?: vscode.WebviewView;
   codiconUri: any;
   extensionUri: vscode.Uri;
-  workspaceUri: any;
 
   public resolveWebviewView(
     webviewView: vscode.WebviewView,
@@ -71,8 +73,7 @@ export class historyProvider implements vscode.WebviewViewProvider {
 
   async getHistory(): Promise<any> {
     const filePath = path.resolve(
-      this.workspaceUri,
-      (global as any).winnetoujsPath || "",
+      getWinnetouFolderFromWorkspaceSettings() || "",
       ".winnetouJsData"
     );
     let json = {};

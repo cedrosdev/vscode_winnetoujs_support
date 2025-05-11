@@ -11,6 +11,7 @@ import { Statusbar } from "./statusbar";
 import { MyStringsWebviewProvider } from "./strings-webview";
 import { bundlerProvider } from "./bundler-webview";
 import { historyProvider } from "./history-webview";
+import { errorProvider } from "./error-webview";
 const statusbar = new Statusbar();
 
 // codicons reference
@@ -18,12 +19,6 @@ const statusbar = new Statusbar();
 
 export async function activate(context: vscode.ExtensionContext) {
   activate_(context);
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand("winnetoujs.extension.reload", () => {
-      vscode.commands.executeCommand("workbench.action.reloadWindow");
-    })
-  );
 }
 
 async function activate_(context: vscode.ExtensionContext) {
@@ -32,12 +27,34 @@ async function activate_(context: vscode.ExtensionContext) {
   statusbar.messages.running();
   statusbar.show();
   statusbar.messages.parsing();
+
   const config = await getUpdatedWinConfig();
+
   if (!config) {
     vscode.window.showErrorMessage(
       "WinnetouJs extension not running because win.config.json file not found or it is not a WinnetouJs project workspace."
     );
+
     statusbar.messages.error("WinnetouJs extension not running.");
+
+    const bundlerProvider_ = new errorProvider(context.extensionUri);
+    const stringsProvider_ = new errorProvider(context.extensionUri);
+    const historyProvider_ = new errorProvider(context.extensionUri);
+
+    context.subscriptions.push(
+      vscode.window.registerWebviewViewProvider(
+        "stringsWebview",
+        stringsProvider_
+      ),
+      vscode.window.registerWebviewViewProvider(
+        "historyWebview",
+        historyProvider_
+      ),
+      vscode.window.registerWebviewViewProvider(
+        "bundlerWebView",
+        bundlerProvider_
+      )
+    );
     return;
   }
   const defaultLang = config.defaultLang;
@@ -123,6 +140,9 @@ async function activate_(context: vscode.ExtensionContext) {
     )
   );
   context.subscriptions.push(
+    vscode.commands.registerCommand("winnetoujs.extension.reload", () => {
+      vscode.commands.executeCommand("workbench.action.reloadWindow");
+    }),
     vscode.commands.registerCommand("winnetoujs.strings.add", () => {
       stringsWebviewProvider.addEntry();
     }),

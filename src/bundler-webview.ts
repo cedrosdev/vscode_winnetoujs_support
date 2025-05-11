@@ -1,7 +1,11 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
-import { getUpdatedPort, getUpdatedWinConfig } from "./parser";
+import {
+  getUpdatedPort,
+  getUpdatedWinConfig,
+  getWinnetouFolderFromWorkspaceSettings,
+} from "./parser";
 const { exec } = require("child_process");
 
 export class bundlerProvider implements vscode.WebviewViewProvider {
@@ -67,15 +71,14 @@ export class bundlerProvider implements vscode.WebviewViewProvider {
     const terminal = vscode.window.createTerminal(
       "WinnetouJs WBR Extension Server"
     );
-
-    terminal.sendText(
-      `${
-        (global as any).winnetoujsPath
-          ? "cd " + (global as any).winnetoujsPath + "; "
-          : ""
-      }node wbr -rs;`
-    );
-    hasToShowTerminal && terminal.show();
+    const winnetouFolder = getWinnetouFolderFromWorkspaceSettings();
+    const command = winnetouFolder
+      ? `cd "${winnetouFolder}" && node wbr -rs`
+      : `node wbr -rs`;
+    terminal.sendText(command);
+    if (hasToShowTerminal) {
+      terminal.show();
+    }
   }
 
   private async getExternalHTML(): Promise<string> {
