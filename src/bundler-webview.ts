@@ -90,9 +90,11 @@ export class bundlerProvider implements vscode.WebviewViewProvider {
       path.resolve(this._extensionUri.fsPath, "src", "bundler-webview.html"),
       "utf-8"
     );
+    const workingFolder = getWinnetouFolderFromWorkspaceSettings();
     return content
       .replace("{codiconUri}", this.codiconUri)
       .replace(`(script)`, script)
+      .replace("((winnetoujs_folder))", workingFolder || "")
       .replace(`// @ts-ignore`, ``)
       .replace(`//@ts-ignore`, ``);
   }
