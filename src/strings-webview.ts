@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { parseStrings } from "./parser";
+import { getWinnetouFolderFromWorkspaceSettings, parseStrings } from "./parser";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -230,8 +230,7 @@ export class MyStringsWebviewProvider implements vscode.WebviewViewProvider {
 
     // now has to rewrite json file with fs
     const folderPath = path.join(
-      vscode.workspace.workspaceFolders?.[0].uri.fsPath || "",
-      (global as any).winnetoujsPath || "",
+      getWinnetouFolderFromWorkspaceSettings() || "",
       "translations"
     );
 

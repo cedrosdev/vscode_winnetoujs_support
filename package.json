@@ -1,5 +1,5 @@
 {
-  "version": "1.0.11",
+  "version": "1.0.12",
   "name": "winnetoujs-vscode-framework",
   "publisher": "cedros-development",
   "displayName": "WinnetouJs Framework",
@@ -137,6 +137,16 @@
           "when": "view == historyWebview"
         }
       ]
+    },
+    "configuration": {
+      "title": "WinnetouJs Settings",
+      "properties": {
+        "winnetoujs.projectPath": {
+          "type": "string",
+          "default": "path/to/your/win.config.json",
+          "description": "Absolute path of WinnetouJs project folder. The same where is located win.config.json and wbr."
+        }
+      }
     }
   },
   "scripts": {
