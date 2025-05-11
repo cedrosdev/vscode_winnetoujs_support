@@ -40,16 +40,6 @@ have an exclusive side panel to organize your translations.
    `npm install winnetoujs`
 3. Reload or restart Visual Studio Code.
 
-## Configuration
-
-In wide projects, you can set WinnetouJs folder to work with in package.json at root of your project.
-
-```
-"winnetoujs": {
-   "path": "./winnetoujs-dashboard-project"
-},
-```
-
 ## Contributing
 
 We welcome contributions! Please see our [Contributing Guide](https://github.com/cedrosdev/vscode_winnetoujs_support) for details on submitting issues and pull requests.
